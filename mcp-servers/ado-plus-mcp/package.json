@@ -1,0 +1,53 @@
+{
+  "name": "ado-plus-mcp",
+  "version": "1.0.0",
+  "description": "A public, read-only Azure DevOps MCP server for projects, boards, sprints, repos, pipelines, tests, dashboards, and delivery reports.",
+  "main": "dist/index.js",
+  "bin": {
+    "ado-plus-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "EVALUATION.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "azure-devops",
+    "model-context-protocol",
+    "codex",
+    "claude",
+    "cursor",
+    "vscode"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pragmaticagile/open-agent-tools.git",
+    "directory": "mcp-servers/ado-plus-mcp"
+  },
+  "homepage": "https://github.com/pragmaticagile/open-agent-tools/tree/main/mcp-servers/ado-plus-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/pragmaticagile/open-agent-tools/issues"
+  },
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
