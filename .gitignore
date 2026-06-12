@@ -21,6 +21,9 @@ yarn-error.log*
 .tmp/
 tmp/
 
+# Local generated media and launch drafts
+launch-assets/
+
 # Local MCP/client config
 .codex/
 config.toml

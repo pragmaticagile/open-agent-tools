@@ -6,7 +6,7 @@ Use this checklist before pushing a new MCP server or Codex skill to a public re
 
 - No `.env` files.
 - No PAT files.
-- No API keys, tokens, cookies, certificates, or credentials.
+- No API keys, API tokens, PATs, cookies, certificates, or credentials.
 - No local MCP client config.
 - No private organization names.
 - No private project names.
@@ -27,6 +27,9 @@ Public examples should use placeholders such as:
 - `YOUR_DELIVERY_PLAN_NAME_HERE`
 - `YOUR_PIPELINE_ID_HERE`
 - `YOUR_PAT_HERE`
+- `YOUR_EMAIL_HERE`
+- `YOUR_API_TOKEN_HERE`
+- `https://YOUR_JIRA_SITE_NAME.atlassian.net`
 - `/FULL/PATH/TO/...`
 
 ## Build And Package
@@ -49,3 +52,4 @@ Confirm the package tarball includes only expected public files.
 - Add `SECURITY.md`.
 - Add package-specific README files.
 - Confirm `.gitignore` excludes local secrets and dependency folders.
+- Confirm generated media, local launch drafts, and large temporary artifacts are not included by accident.

@@ -30,6 +30,9 @@ Use generic placeholders in docs and examples:
 - `YOUR_DELIVERY_PLAN_NAME_HERE`
 - `YOUR_PIPELINE_ID_HERE`
 - `YOUR_PAT_HERE`
+- `YOUR_EMAIL_HERE`
+- `YOUR_API_TOKEN_HERE`
+- `https://YOUR_JIRA_SITE_NAME.atlassian.net`
 - `/FULL/PATH/TO/...`
 
 ## Before Committing

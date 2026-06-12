@@ -1,0 +1,56 @@
+{
+  "name": "jira-plus-mcp",
+  "version": "1.0.0",
+  "description": "A public, read-first Jira Cloud MCP server for projects, boards, sprints, issues, delivery risk checks, and optional write workflows.",
+  "main": "dist/index.js",
+  "bin": {
+    "jira-plus-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "README.md",
+    "TESTING.md",
+    "EVALUATION.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "configure:claude": "node scripts/configure-claude-desktop.mjs",
+    "config:codex": "node scripts/print-codex-config-template.mjs",
+    "dev": "tsx src/index.ts",
+    "setup:claude": "node scripts/setup-claude.mjs",
+    "setup:cursor": "node scripts/setup-cursor.mjs",
+    "setup:vscode": "node scripts/setup-vscode.mjs",
+    "sync-env:codex": "node scripts/sync-env-from-codex-config.mjs",
+    "start": "node dist/index.js",
+    "test": "npm run build",
+    "validate:claude": "node scripts/validate-claude-desktop-config.mjs",
+    "validate:cursor": "node scripts/validate-cursor-config.mjs",
+    "validate:vscode": "node scripts/validate-vscode-config.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "jira",
+    "atlassian",
+    "model-context-protocol",
+    "codex",
+    "claude",
+    "cursor",
+    "vscode"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  }
+}
