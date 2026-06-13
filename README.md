@@ -10,6 +10,7 @@ This repository is a public home for tools that help AI clients such as Codex, C
 - [Jira Plus MCP](mcp-servers/jira-plus-mcp/README.md)
 - [Azure DevOps Plus MCP](mcp-servers/ado-plus-mcp/README.md)
 - [Skills catalog](skills/README.md)
+- [ADO Delivery Management skill](docs/skills/ado-delivery-management.md)
 - [Publishing checklist](docs/publishing-checklist.md)
 - [Security guidance](SECURITY.md)
 - [Contributing guide](CONTRIBUTING.md)
@@ -52,6 +53,20 @@ These tools are designed to be:
 - Explicit about write mode and permissions.
 - Friendly when a connected service blocks access.
 - Free of hardcoded personal, company, project, token, or local machine values.
+
+## Why This Is Different
+
+Most agent connectors stop at "let the assistant read a tool." This repo is focused on what teams need after connection: safer setup, delivery-ready reports, role-aware summaries, and clear next actions.
+
+The goal is to help teams answer everyday questions faster:
+
+- What changed yesterday?
+- What is at risk today?
+- Who needs help or a decision?
+- Which work is aging, blocked, unowned, or missing estimates?
+- Are sprint, roadmap, pipeline, test, and dashboard signals visible enough to trust?
+
+The MCP servers provide the read-only connection. The skills turn that data into practical delivery management workflows.
 
 ## Public Safety Rules
 

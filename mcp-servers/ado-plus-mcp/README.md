@@ -29,9 +29,11 @@ With an MCP client, you can ask questions like:
 
 ## Sprint Reports
 
-Sprint reporting tools can find the current sprint for a project and team, list sprint work items, list open bugs, summarize team capacity, and create a business-friendly sprint summary.
+Sprint reporting tools can find the current sprint for a project and team, list sprint work items, list open bugs, summarize team capacity, and create business-friendly sprint and daily work reports.
 
-Reports include item IDs, titles, work item types, states, owners, iterations, completed and remaining work when available, missing-field warnings, quality concerns, delivery risks, and recommended next actions.
+Reports include item IDs, titles, work item types, states, owners, iterations, completed and remaining work when available, missing-field warnings, quality concerns, delivery risks, long-aging work, and recommended next actions.
+
+Daily reporting tools can also show what was closed yesterday, compare each team member's capacity to completed work, include team members with no completed work, and call out people marked off in sprint capacity when Azure DevOps provides day-off details.
 
 ## Delivery Plan Reports
 
@@ -252,6 +254,10 @@ MCP clients usually read server configuration only when they start. After editin
 - Use ado_plus to show team capacity for team YOUR_TEAM_NAME_HERE.
 - Use ado_plus to create a sprint summary report for team YOUR_TEAM_NAME_HERE.
 - Use ado_plus to show sprint health for team YOUR_TEAM_NAME_HERE.
+- Use ado_plus to create a yesterday team work report for team YOUR_TEAM_NAME_HERE.
+- Use ado_plus to list work items closed yesterday in project YOUR_PROJECT_NAME_HERE.
+- Use ado_plus to list long-aging work items older than 14 days in project YOUR_PROJECT_NAME_HERE.
+- Use ado_plus to create a daily risk dependency report for team YOUR_TEAM_NAME_HERE.
 - Use ado_plus to list delivery plans in project YOUR_PROJECT_NAME_HERE.
 - Use ado_plus to show epics in delivery plan YOUR_DELIVERY_PLAN_NAME_HERE.
 - Use ado_plus to create a delivery plan report for YOUR_DELIVERY_PLAN_NAME_HERE.
@@ -278,6 +284,10 @@ Work item and sprint tools:
 - `get_sprint_health`
 - `create_sprint_summary_report`
 - `compare_sprint_capacity_to_completed_work`
+- `list_work_items_closed_on_date`
+- `create_yesterday_team_work_report`
+- `list_long_aging_work_items`
+- `create_daily_risk_dependency_report`
 
 Delivery Plan tools:
 

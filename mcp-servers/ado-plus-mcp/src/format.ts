@@ -57,6 +57,7 @@ export function normalizeWorkItem(item: { id: number; url?: string; fields?: Rec
       fieldString(fields, "Microsoft.VSTS.Scheduling.DueDate") ||
       undefined,
     closedDate: fieldString(fields, "Microsoft.VSTS.Common.ClosedDate") || undefined,
+    changedDate: fieldString(fields, "System.ChangedDate") || undefined,
     remainingWork: fieldNumber(fields, "Microsoft.VSTS.Scheduling.RemainingWork"),
     completedWork: fieldNumber(fields, "Microsoft.VSTS.Scheduling.CompletedWork"),
     originalEstimate: fieldNumber(fields, "Microsoft.VSTS.Scheduling.OriginalEstimate"),
