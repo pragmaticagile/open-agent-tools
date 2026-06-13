@@ -24,6 +24,7 @@ export interface NormalizedWorkItem {
   startDate?: string;
   targetDate?: string;
   closedDate?: string;
+  changedDate?: string;
   remainingWork?: number;
   completedWork?: number;
   originalEstimate?: number;
@@ -47,6 +48,7 @@ export interface CapacitySummary {
     name: string;
     activities: Array<{ name: string; capacityPerDay: number }>;
     daysOff: number;
+    daysOffDetails?: Array<{ start?: string; end?: string }>;
     totalCapacityPerDay: number;
   }>;
   totalCapacityPerDay: number;

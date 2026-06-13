@@ -7,6 +7,7 @@ const WORK_ITEM_FIELDS = [
   "System.Title",
   "System.WorkItemType",
   "System.State",
+  "System.ChangedDate",
   "System.AssignedTo",
   "System.IterationPath",
   "System.AreaPath",
@@ -144,11 +145,21 @@ export async function getTeamCapacity(
           capacityPerDay: Number((activity as Record<string, unknown>).capacityPerDay || 0)
         }))
       : [];
-    const daysOff = Array.isArray(entry.daysOff) ? entry.daysOff.length : 0;
+    const daysOffDetails = Array.isArray(entry.daysOff)
+      ? entry.daysOff.map((dayOff) => {
+          const value = dayOff as Record<string, unknown>;
+          return {
+            start: value.start ? String(value.start) : undefined,
+            end: value.end ? String(value.end) : undefined
+          };
+        })
+      : [];
+    const daysOff = daysOffDetails.length;
     return {
       name: String(teamMember.displayName || teamMember.uniqueName || "Unknown team member"),
       activities,
       daysOff,
+      daysOffDetails,
       totalCapacityPerDay: activities.reduce((sum, activity) => sum + activity.capacityPerDay, 0)
     };
   });

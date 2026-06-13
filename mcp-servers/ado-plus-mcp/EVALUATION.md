@@ -30,6 +30,9 @@ Configure a local MCP client with placeholders replaced by your own organization
 - Use ado_plus to list repositories in project YOUR_PROJECT_NAME_HERE.
 - Use ado_plus to list open bugs in the current sprint for team YOUR_TEAM_NAME_HERE.
 - Use ado_plus to create a sprint summary report for team YOUR_TEAM_NAME_HERE.
+- Use ado_plus to create a yesterday team work report for team YOUR_TEAM_NAME_HERE.
+- Use ado_plus to list long-aging work items older than 14 days in project YOUR_PROJECT_NAME_HERE.
+- Use ado_plus to create a daily risk dependency report for team YOUR_TEAM_NAME_HERE.
 - Use ado_plus to create a delivery plan report for YOUR_DELIVERY_PLAN_NAME_HERE.
 
 ## Privacy Check

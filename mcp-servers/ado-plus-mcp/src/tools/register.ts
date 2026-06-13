@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { AzureDevOpsClient, PREVIEW_API_VERSION, valueArray } from "../azure/client.js";
 import { getCurrentSprint, getTeamCapacity, getWorkItem, getWorkItemsByIds, listDeliveryPlans, listSprintWorkItems, resolveDeliveryPlanId, runWiql } from "../azure/workItems.js";
-import { createDeliveryPlanReport, createSprintSummaryReport, extractTimelineCards, sprintHealth, summarizeCapacity } from "../reporting/reports.js";
+import { createDailyRiskDependencyReport, createDeliveryPlanReport, createSprintSummaryReport, createYesterdayTeamWorkReport, extractTimelineCards, listLongAgingWorkItems, listWorkItemsClosedOnDate, sprintHealth, summarizeCapacity } from "../reporting/reports.js";
 import { normalizeWorkItem, resolveDeliveryPlan, resolvePipeline, resolveProject, resolveRepository, resolveTeam, toolError, toolText, workItemTable } from "../format.js";
 import { limit, offset, organization, project, responseFormat, team } from "./schemas.js";
 
@@ -195,6 +195,79 @@ export function registerTools(server: McpServer, client: AzureDevOpsClient): voi
     const remainingWork = items.reduce((sum, item) => sum + (item.remainingWork || 0), 0);
     const summary = { sprint, totalDailyCapacity: capacity.capacity.totalCapacityPerDay, completedWork, remainingWork, note: "Azure DevOps capacity is daily capacity. Compare against sprint length and team days off before treating it as full sprint capacity." };
     return params.response_format === "json" ? toolText(summary, "json") : toolText(`# Capacity vs Completed Work\n\nSprint: ${sprint.iterationName}\nTotal daily capacity: ${summary.totalDailyCapacity}\nCompleted work: ${completedWork}\nRemaining work: ${remainingWork}\n\n${summary.note}`);
+  }));
+
+  server.registerTool("list_work_items_closed_on_date", {
+    title: "List Work Items Closed On Date",
+    description: "List work items closed on a specific date, with optional iteration and work item type filters. Useful for daily completion evidence.",
+    inputSchema: {
+      organization,
+      project,
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Date in YYYY-MM-DD format. Defaults to yesterday."),
+      iteration_path: z.string().min(1).optional().describe("Optional exact iteration path."),
+      work_item_type: z.string().min(1).optional().describe("Optional type such as Bug, User Story, Feature, Epic, Task."),
+      limit,
+      response_format: responseFormat
+    },
+    annotations
+  }, async (params) => safe(async () => {
+    const result = await listWorkItemsClosedOnDate(client, params);
+    return params.response_format === "json"
+      ? toolText(result, "json")
+      : toolText(`# Work Items Closed On ${result.date}\n\nProject: ${result.project}\nClosed items: ${result.count}\n\n${workItemTable(result.items)}\n\n${result.warnings.length ? `Warnings:\n${result.warnings.map((warning) => `- ${warning}`).join("\n")}` : "Warnings: none"}`);
+  }));
+
+  server.registerTool("create_yesterday_team_work_report", {
+    title: "Create Yesterday Team Work Report",
+    description: "Create a daily team report comparing each member's capacity to completed work from items closed yesterday. Includes members with no completed work or marked days off.",
+    inputSchema: {
+      organization,
+      project,
+      team,
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().describe("Date in YYYY-MM-DD format. Defaults to yesterday."),
+      limit,
+      response_format: responseFormat
+    },
+    annotations
+  }, async (params) => safe(async () => {
+    const report = await createYesterdayTeamWorkReport(client, params);
+    return params.response_format === "json" ? toolText({ report }, "json") : toolText(report);
+  }));
+
+  server.registerTool("list_long_aging_work_items", {
+    title: "List Long Aging Work Items",
+    description: "List active work items that have not changed for a configurable number of days. Helpful for stale-work and blocker reviews.",
+    inputSchema: {
+      organization,
+      project,
+      iteration_path: z.string().min(1).optional().describe("Optional exact iteration path."),
+      age_days: z.number().int().min(1).max(365).default(14).describe("Minimum days since last change."),
+      limit,
+      response_format: responseFormat
+    },
+    annotations
+  }, async (params) => safe(async () => {
+    const result = await listLongAgingWorkItems(client, params);
+    return params.response_format === "json"
+      ? toolText(result, "json")
+      : toolText(`# Long-Aging Work Items\n\nProject: ${result.project}\nThreshold: ${result.ageDays} days\nCutoff date: ${result.cutoffDate}\nItems found: ${result.count}\n\n${workItemTable(result.items)}`);
+  }));
+
+  server.registerTool("create_daily_risk_dependency_report", {
+    title: "Create Daily Risk Dependency Report",
+    description: "Create a daily delivery-risk report covering open bugs, long-aging work, missing owners, missing estimates, overdue targets, and dependency review notes.",
+    inputSchema: {
+      organization,
+      project,
+      team: z.string().min(1).optional().describe("Optional team name. When provided, the report is scoped to the current sprint for that team."),
+      age_days: z.number().int().min(1).max(365).default(14).describe("Minimum days since last change for long-aging items."),
+      limit,
+      response_format: responseFormat
+    },
+    annotations
+  }, async (params) => safe(async () => {
+    const report = await createDailyRiskDependencyReport(client, params);
+    return params.response_format === "json" ? toolText({ report }, "json") : toolText(report);
   }));
 
   registerDeliveryTools(server, client);

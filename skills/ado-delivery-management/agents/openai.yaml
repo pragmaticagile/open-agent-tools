@@ -1,0 +1,7 @@
+interface:
+  display_name: "ADO Delivery Management"
+  short_description: "Azure DevOps reports, risks, focus, and delivery actions"
+  brand_color: "#0078D4"
+  default_prompt: "Use $ado-delivery-management to create a sprint health report with risks and team actions."
+policy:
+  allow_implicit_invocation: true
