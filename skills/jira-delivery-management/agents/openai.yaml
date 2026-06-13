@@ -1,0 +1,8 @@
+interface:
+  display_name: "Jira Delivery Management"
+  short_description: "Jira reports, risks, focus, and delivery actions"
+  brand_color: "#2563EB"
+  default_prompt: "Use $jira-delivery-management to create a sprint health report with risks and team actions."
+policy:
+  allow_implicit_invocation: true
+
