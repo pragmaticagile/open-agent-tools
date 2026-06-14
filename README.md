@@ -4,6 +4,11 @@ Public MCP servers, agent skills, templates, and guides for practical delivery w
 
 This repository is a public home for tools that help AI clients such as Codex, Claude, VS Code, Cursor, and other MCP-compatible apps work with engineering and delivery systems. Each package is documented and testable on its own, while the repo keeps one consistent structure for future MCPs and skills.
 
+Built by [Sunil Gulia](https://linkedin.com/in/sunilgulia) —
+Enterprise Agile Coach, Digital Transformation Leader, and
+Professional Scrum Trainer — from patterns observed across 30+
+agile teams and 7 Agile Release Trains at scale.
+
 ## Start Here
 
 - [MCP server catalog](mcp-servers/README.md)
