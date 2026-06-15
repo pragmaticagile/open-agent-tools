@@ -1,0 +1,128 @@
+name: Validate
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+      - "docs/**"
+      - "mcp-servers/**"
+      - "skills/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/**"
+      - "docs/**"
+      - "mcp-servers/**"
+      - "skills/**"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-skills:
+    name: Validate skills
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate skill packages
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path("skills")
+          failures = []
+
+          if not root.exists():
+              failures.append("skills/ directory is missing")
+          else:
+              skill_dirs = sorted(p for p in root.iterdir() if p.is_dir())
+              if not skill_dirs:
+                  failures.append("No skill directories found under skills/")
+
+              for skill_dir in skill_dirs:
+                  skill_md = skill_dir / "SKILL.md"
+                  if not skill_md.exists():
+                      failures.append(f"{skill_dir}: missing SKILL.md")
+                      continue
+
+                  text = skill_md.read_text(encoding="utf-8")
+                  if not text.startswith("---\n"):
+                      failures.append(f"{skill_md}: missing YAML frontmatter")
+                      continue
+
+                  end = text.find("\n---", 4)
+                  if end == -1:
+                      failures.append(f"{skill_md}: frontmatter is not closed")
+                      continue
+
+                  frontmatter = text[4:end]
+                  fields = {}
+                  for line in frontmatter.splitlines():
+                      if ":" in line and not line.startswith(" "):
+                          key, value = line.split(":", 1)
+                          fields[key.strip()] = value.strip().strip('"').strip("'")
+
+                  name = fields.get("name")
+                  description = fields.get("description")
+                  if not name:
+                      failures.append(f"{skill_md}: missing frontmatter field 'name'")
+                  elif name != skill_dir.name:
+                      failures.append(f"{skill_md}: name '{name}' must match folder '{skill_dir.name}'")
+
+                  if not description or len(description) < 40:
+                      failures.append(f"{skill_md}: description is missing or too short")
+
+                  if not re.fullmatch(r"[a-z0-9-]+", skill_dir.name):
+                      failures.append(f"{skill_dir}: folder name must use lowercase letters, digits, and hyphens")
+
+                  agent_file = skill_dir / "agents" / "openai.yaml"
+                  if not agent_file.exists():
+                      failures.append(f"{skill_dir}: missing agents/openai.yaml")
+
+                  doc_file = Path("docs/skills") / f"{skill_dir.name}.md"
+                  if not doc_file.exists():
+                      failures.append(f"{skill_dir}: missing public guide {doc_file}")
+
+                  if (skill_dir / "README.md").exists():
+                      failures.append(f"{skill_dir}: README.md should not be inside skill packages; use docs/skills instead")
+
+          if failures:
+              print("Skill validation failed:")
+              for failure in failures:
+                  print(f"- {failure}")
+              sys.exit(1)
+
+          print("Skill validation passed.")
+
+  validate-mcp-servers:
+    name: Build MCP servers
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - mcp-servers/ado-plus-mcp
+          - mcp-servers/jira-plus-mcp
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.package }}
+        run: npm ci
+
+      - name: Build and test
+        working-directory: ${{ matrix.package }}
+        run: npm test
